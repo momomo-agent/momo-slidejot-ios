@@ -2,54 +2,201 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var db: DatabaseManager
-    
-    @State private var currentIndex: Int = 0
-    @State private var dragOffset: CGFloat = 0
+    @Namespace private var cardNamespace
+    @State private var currentJotId: String? = nil
+    @State private var isCollapsed = true
+    @State private var pullOffset: CGFloat = 0
+    @State private var showSettings = false
+    @State private var keyboardVisible = false
     
     private var jots: [Jot] {
         db.jots.filter { !$0.isTrashed }
     }
     
     var body: some View {
-        GeometryReader { geometry in
+        GeometryReader { geo in
             ZStack {
-                Color.appBackground
-                    .ignoresSafeArea()
+                Color.appBackground.ignoresSafeArea()
+                    .contentShape(Rectangle())
+                    .onTapGesture { handleBackgroundTap() }
                 
                 if db.isLoading {
                     ProgressView()
                 } else if jots.isEmpty {
-                    EmptyStateView(onCreateNew: createNewJot)
+                    emptyState
                 } else {
-                    CardStackView(
-                        jots: jots,
-                        currentIndex: $currentIndex,
-                        dragOffset: $dragOffset,
-                        geometry: geometry,
-                        onUpdate: { jot, content in
-                            Task {
-                                await db.updateJot(jot, content: content)
-                            }
-                        }
-                    )
+                    cardContent(geo: geo)
+                }
+                
+                if !keyboardVisible {
+                    bottomButtons(geo: geo)
                 }
             }
         }
-        .overlay(alignment: .bottomTrailing) {
-            if !jots.isEmpty {
-                AddButton(action: createNewJot)
-                    .padding(24)
+        .sheet(isPresented: $showSettings) { SettingsView() }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            withAnimation(.easeOut(duration: 0.25)) { keyboardVisible = true }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            withAnimation(.easeOut(duration: 0.25)) { keyboardVisible = false }
+        }
+    }
+    
+    private func handleBackgroundTap() {
+        if keyboardVisible {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        } else if !isCollapsed {
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                isCollapsed = true
             }
         }
     }
     
-    private func createNewJot() {
-        Task {
-            if let _ = await db.createJot() {
-                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                    currentIndex = 0
+    private func cardContent(geo: GeometryProxy) -> some View {
+        let expandedW = geo.size.width - 40
+        let expandedH = geo.size.height * 0.7
+        let collapsedW = geo.size.width - 60
+        let collapsedH = geo.size.height * 0.25
+        let pullRatio = min(pullOffset / 200, 1.0)
+        let currentScale = 1.0 - pullRatio * 0.3
+        
+        return ZStack {
+            if isCollapsed {
+                ScrollView {
+                    LazyVStack(spacing: 16) {
+                        ForEach(jots) { jot in
+                            CardItem(
+                                jot: jot,
+                                isCurrent: jot.id == currentJotId,
+                                isCollapsed: true,
+                                onUpdate: { _ in },
+                                onTap: {
+                                    currentJotId = jot.id
+                                    withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                                        isCollapsed = false
+                                    }
+                                }
+                            )
+                            .matchedGeometryEffect(id: jot.id, in: cardNamespace)
+                            .frame(width: collapsedW, height: collapsedH)
+                        }
+                    }
+                    .padding(.vertical, 40)
                 }
             }
+            
+            if !isCollapsed, let currentJot = jots.first(where: { $0.id == currentJotId }) {
+                Color.black.opacity(0.001)
+                    .ignoresSafeArea()
+                    .contentShape(Rectangle())
+                    .onTapGesture { handleBackgroundTap() }
+                    .gesture(
+                        keyboardVisible ? nil :
+                        DragGesture(minimumDistance: 5)
+                            .onChanged { value in
+                                if value.translation.height > 0 {
+                                    pullOffset = value.translation.height
+                                }
+                            }
+                            .onEnded { value in
+                                if value.translation.height > 100 {
+                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+                                        isCollapsed = true
+                                        pullOffset = 0
+                                    }
+                                } else {
+                                    withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+                                        pullOffset = 0
+                                    }
+                                }
+                            }
+                    )
+                
+                CardItem(
+                    jot: currentJot,
+                    isCurrent: true,
+                    isCollapsed: false,
+                    onUpdate: { text in Task { await db.updateJot(currentJot, content: text) } },
+                    onTap: {}
+                )
+                .matchedGeometryEffect(id: currentJot.id, in: cardNamespace)
+                .frame(width: expandedW, height: expandedH)
+                .scaleEffect(currentScale)
+                .offset(y: pullOffset * 0.6)
+            }
+        }
+    }
+    
+    private var emptyState: some View {
+        VStack(spacing: 24) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color.cardBackground.opacity(0.5))
+                    .frame(width: 100, height: 120)
+                    .rotationEffect(.degrees(-8))
+                    .offset(x: -15, y: 10)
+                
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color.cardBackground.opacity(0.7))
+                    .frame(width: 100, height: 120)
+                    .rotationEffect(.degrees(5))
+                    .offset(x: 10, y: 5)
+                
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color.cardBackground)
+                    .frame(width: 100, height: 120)
+                    .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
+            }
+            
+            VStack(spacing: 8) {
+                Text("Stay Draft.")
+                    .font(.title2.weight(.semibold))
+                    .foregroundColor(.primaryText)
+                Text("Stay Messy.")
+                    .font(.title3)
+                    .foregroundColor(.secondaryText)
+            }
+            
+            Text("点击 + 开始你的第一张便签")
+                .font(.subheadline)
+                .foregroundColor(.secondaryText.opacity(0.7))
+        }
+    }
+    
+    private func bottomButtons(geo: GeometryProxy) -> some View {
+        VStack {
+            Spacer()
+            HStack {
+                Button { showSettings = true } label: {
+                    Image(systemName: "gearshape")
+                        .font(.title3)
+                        .foregroundColor(.secondaryText)
+                        .frame(width: 44, height: 44)
+                }
+                .padding(.leading, 24)
+                
+                Spacer()
+                
+                Button {
+                    Task {
+                        if let newJot = await db.createJot() {
+                            currentJotId = newJot.id
+                            withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                                isCollapsed = false
+                            }
+                        }
+                    }
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.title2.bold())
+                        .foregroundColor(.appBackground)
+                        .frame(width: 56, height: 56)
+                        .background(Circle().fill(Color.primaryText))
+                        .shadow(color: .black.opacity(0.2), radius: 8, y: 4)
+                }
+                .padding(.trailing, 24)
+            }
+            .padding(.bottom, 24)
         }
     }
 }
