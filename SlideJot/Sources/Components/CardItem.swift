@@ -66,7 +66,7 @@ struct CardItem: View {
                     .foregroundColor(.orange)
             }
             Spacer()
-            Text(jot.updatedDate.formatted(.relative(presentation: .named)))
+            Text(shortTimeText)
                 .font(.caption)
                 .foregroundColor(.gray)
         }
@@ -95,6 +95,20 @@ struct CardItem: View {
             .onChange(of: isFocused) { _, focused in
                 if !focused { finishEditing() }
             }
+    }
+    
+    private var shortTimeText: String {
+        let now = Date()
+        let diff = now.timeIntervalSince(jot.updatedDate)
+        
+        if diff < 60 { return "刚刚" }
+        if diff < 3600 { return "\(Int(diff / 60))分钟前" }
+        if diff < 86400 { return "\(Int(diff / 3600))小时前" }
+        if diff < 604800 { return "\(Int(diff / 86400))天前" }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M/d"
+        return formatter.string(from: jot.updatedDate)
     }
     
     private func startEditing() {
