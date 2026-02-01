@@ -1,5 +1,16 @@
 import SwiftUI
 
+enum CardSizeMode: String {
+    case compact, regular
+    
+    var heightRatio: CGFloat {
+        switch self {
+        case .compact: return 0.15
+        case .regular: return 0.25
+        }
+    }
+}
+
 struct ContentView: View {
     @EnvironmentObject private var db: DatabaseManager
     @Namespace private var cardNamespace
@@ -8,6 +19,7 @@ struct ContentView: View {
     @State private var pullOffset: CGFloat = 0
     @State private var showSettings = false
     @State private var keyboardVisible = false
+    @State private var cardSizeMode: CardSizeMode = .regular
     
     private var jots: [Jot] {
         db.jots.filter { !$0.isTrashed }.sorted { $0.updatedAt > $1.updatedAt }
@@ -56,7 +68,7 @@ struct ContentView: View {
         let expandedW = geo.size.width - 40
         let expandedH = geo.size.height * 0.7
         let collapsedW = geo.size.width - 60
-        let collapsedH = geo.size.height * 0.25
+        let collapsedH = geo.size.height * cardSizeMode.heightRatio
         let pullRatio = min(pullOffset / 200, 1.0)
         let currentScale = 1.0 - pullRatio * 0.3
         
@@ -92,6 +104,18 @@ struct ContentView: View {
                 }
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
+                .simultaneousGesture(
+                    MagnifyGesture()
+                        .onEnded { value in
+                            withAnimation(.spring(response: 0.3)) {
+                                if value.magnification > 1.2 {
+                                    cardSizeMode = .regular
+                                } else if value.magnification < 0.8 {
+                                    cardSizeMode = .compact
+                                }
+                            }
+                        }
+                )
             }
             
             if !isCollapsed, let currentJot = jots.first(where: { $0.id == currentJotId }) {
