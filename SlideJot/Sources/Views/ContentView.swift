@@ -147,6 +147,11 @@ struct ContentView: View {
                             }
                     )
                 
+                // 下拉时宽高跟手渐变
+                let pullProgress = min(pullOffset / 200, 1.0)
+                let currentW = expandedW - (expandedW - collapsedW) * pullProgress
+                let currentH = expandedH - (expandedH - collapsedH) * pullProgress
+                
                 CardItem(
                     jot: currentJot,
                     isCurrent: true,
@@ -155,9 +160,8 @@ struct ContentView: View {
                     onTap: {}
                 )
                 .matchedGeometryEffect(id: currentJot.id, in: cardNamespace)
-                .frame(width: expandedW, height: expandedH)
-                .scaleEffect(currentScale)
-                .offset(y: pullOffset * 0.6)
+                .frame(width: currentW, height: currentH)
+                .offset(y: pullOffset * 0.5)
             }
         }
     }
