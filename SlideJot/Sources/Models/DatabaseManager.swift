@@ -29,9 +29,19 @@ final class DatabaseManager: ObservableObject {
         }
     }
     
-    /// 获取数据库路径（优先 iCloud，否则本地）
+    /// 获取数据库路径
     private func getDatabasePath() throws -> String {
-        // 尝试 iCloud
+        #if targetEnvironment(simulator)
+        // 模拟器：直接读取 Mac 版数据库
+        let macDB = NSString(string: "~/Library/Application Support/SlideJot/jots.db")
+            .expandingTildeInPath
+        if FileManager.default.fileExists(atPath: macDB) {
+            print("📱 Using Mac database: \(macDB)")
+            return macDB
+        }
+        #endif
+        
+        // 真机：尝试 iCloud
         if let iCloudURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?
             .appendingPathComponent("Documents") {
             try FileManager.default.createDirectory(at: iCloudURL, withIntermediateDirectories: true)
