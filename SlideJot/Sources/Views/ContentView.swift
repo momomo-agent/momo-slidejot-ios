@@ -118,6 +118,7 @@ struct ContentView: View {
                     }
             )
             .allowsHitTesting(isCollapsed)
+            .opacity(isCollapsed ? 1 : 0)
             
             // 展开的卡片覆盖层 - 只在非收起状态显示
             if !isCollapsed, let currentJot = jots.first(where: { $0.id == currentJotId }) {
