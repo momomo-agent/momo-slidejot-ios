@@ -10,7 +10,7 @@ struct ContentView: View {
     @State private var keyboardVisible = false
     
     private var jots: [Jot] {
-        db.jots.filter { !$0.isTrashed }
+        db.jots.filter { !$0.isTrashed }.sorted { $0.updatedAt > $1.updatedAt }
     }
     
     var body: some View {
