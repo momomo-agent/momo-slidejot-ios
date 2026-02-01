@@ -70,96 +70,102 @@ struct ContentView: View {
         let expandedH = geo.size.height * 0.7
         let collapsedW = geo.size.width - 60
         let collapsedH = geo.size.height * cardSizeMode.heightRatio
-        let pullRatio = min(pullOffset / 200, 1.0)
-        let currentScale = 1.0 - pullRatio * 0.3
         
         return ZStack {
-            if isCollapsed {
-                List {
-                    ForEach(jots) { jot in
-                        CardItem(
-                            jot: jot,
-                            isCurrent: jot.id == currentJotId,
-                            isCollapsed: true,
-                            onUpdate: { _ in },
-                            onTap: {
-                                currentJotId = jot.id
-                                withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
-                                    isCollapsed = false
-                                }
+            // 列表始终存在
+            List {
+                ForEach(jots) { jot in
+                    CardItem(
+                        jot: jot,
+                        isCurrent: jot.id == currentJotId,
+                        isCollapsed: true,
+                        onUpdate: { _ in },
+                        onTap: {
+                            currentJotId = jot.id
+                            withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                                isCollapsed = false
                             }
-                        )
-                        .frame(width: collapsedW, height: collapsedH)
-                        .listRowBackground(Color.clear)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 8, leading: 30, bottom: 8, trailing: 30))
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            Button(role: .destructive) {
-                                Task { await db.trashJot(jot) }
-                            } label: {
-                                Label("删除", systemImage: "trash")
-                            }
+                        }
+                    )
+                    .frame(width: collapsedW, height: collapsedH)
+                    .opacity(isCollapsed || jot.id != currentJotId ? 1 : 0)
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 30, bottom: 8, trailing: 30))
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Button(role: .destructive) {
+                            Task { await db.trashJot(jot) }
+                        } label: {
+                            Label("删除", systemImage: "trash")
                         }
                     }
                 }
-                .listStyle(.plain)
-                .scrollContentBackground(.hidden)
-                .scrollPosition(id: $scrolledJotId)
-                .simultaneousGesture(
-                    MagnifyGesture()
-                        .onEnded { value in
-                            withAnimation(.spring(response: 0.3)) {
-                                if value.magnification > 1.2 {
-                                    cardSizeMode = .regular
-                                } else if value.magnification < 0.8 {
-                                    cardSizeMode = .compact
-                                }
+            }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .scrollPosition(id: $scrolledJotId)
+            .simultaneousGesture(
+                MagnifyGesture()
+                    .onEnded { value in
+                        withAnimation(.spring(response: 0.3)) {
+                            if value.magnification > 1.2 {
+                                cardSizeMode = .regular
+                            } else if value.magnification < 0.8 {
+                                cardSizeMode = .compact
                             }
                         }
-                )
-            }
+                    }
+            )
+            .allowsHitTesting(isCollapsed)
             
-            if !isCollapsed, let currentJot = jots.first(where: { $0.id == currentJotId }) {
-                Color.black.opacity(0.001)
-                    .ignoresSafeArea()
-                    .contentShape(Rectangle())
-                    .onTapGesture { handleBackgroundTap() }
-                    .gesture(
-                        keyboardVisible ? nil :
-                        DragGesture(minimumDistance: 5)
-                            .onChanged { value in
-                                if value.translation.height > 0 {
-                                    pullOffset = value.translation.height
-                                }
-                            }
-                            .onEnded { value in
-                                if value.translation.height > 100 {
-                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
-                                        isCollapsed = true
-                                        pullOffset = 0
-                                    }
-                                } else {
-                                    withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
-                                        pullOffset = 0
-                                    }
-                                }
-                            }
-                    )
-                
-                // 下拉时宽高跟手渐变
+            // 展开的卡片覆盖层
+            if let currentJot = jots.first(where: { $0.id == currentJotId }) {
                 let pullProgress = min(pullOffset / 200, 1.0)
-                let currentW = expandedW - (expandedW - collapsedW) * pullProgress
-                let currentH = expandedH - (expandedH - collapsedH) * pullProgress
+                let animProgress = isCollapsed ? 1.0 : pullProgress
+                let currentW = expandedW - (expandedW - collapsedW) * animProgress
+                let currentH = expandedH - (expandedH - collapsedH) * animProgress
+                
+                Group {
+                    if !isCollapsed {
+                        Color.black.opacity(0.001)
+                            .ignoresSafeArea()
+                            .contentShape(Rectangle())
+                            .onTapGesture { handleBackgroundTap() }
+                            .gesture(
+                                keyboardVisible ? nil :
+                                DragGesture(minimumDistance: 5)
+                                    .onChanged { value in
+                                        if value.translation.height > 0 {
+                                            pullOffset = value.translation.height
+                                        }
+                                    }
+                                    .onEnded { value in
+                                        if value.translation.height > 100 {
+                                            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+                                                isCollapsed = true
+                                                pullOffset = 0
+                                            }
+                                        } else {
+                                            withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+                                                pullOffset = 0
+                                            }
+                                        }
+                                    }
+                            )
+                    }
+                }
                 
                 CardItem(
                     jot: currentJot,
                     isCurrent: true,
-                    isCollapsed: false,
+                    isCollapsed: isCollapsed,
                     onUpdate: { text in Task { await db.updateJot(currentJot, content: text) } },
                     onTap: {}
                 )
                 .frame(width: currentW, height: currentH)
                 .offset(y: pullOffset * 0.5)
+                .opacity(isCollapsed ? 0 : 1)
+                .allowsHitTesting(!isCollapsed)
             }
         }
     }
