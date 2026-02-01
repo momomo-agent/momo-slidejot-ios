@@ -8,7 +8,6 @@ struct ContentView: View {
     @State private var pullOffset: CGFloat = 0
     @State private var showSettings = false
     @State private var keyboardVisible = false
-    @State private var jotToDelete: Jot? = nil
     
     private var jots: [Jot] {
         db.jots.filter { !$0.isTrashed }.sorted { $0.updatedAt > $1.updatedAt }
@@ -35,20 +34,6 @@ struct ContentView: View {
             }
         }
         .sheet(isPresented: $showSettings) { SettingsView() }
-        .alert("确认删除", isPresented: .init(
-            get: { jotToDelete != nil },
-            set: { if !$0 { jotToDelete = nil } }
-        )) {
-            Button("取消", role: .cancel) { jotToDelete = nil }
-            Button("删除", role: .destructive) {
-                if let jot = jotToDelete {
-                    Task { await db.trashJot(jot) }
-                }
-                jotToDelete = nil
-            }
-        } message: {
-            Text("确定要删除这条笔记吗？")
-        }
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
             withAnimation(.easeOut(duration: 0.25)) { keyboardVisible = true }
         }
@@ -96,9 +81,9 @@ struct ContentView: View {
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 8, leading: 30, bottom: 8, trailing: 30))
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
-                                jotToDelete = jot
+                                Task { await db.trashJot(jot) }
                             } label: {
                                 Label("删除", systemImage: "trash")
                             }
