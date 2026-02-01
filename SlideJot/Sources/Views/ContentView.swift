@@ -5,7 +5,7 @@ enum CardSizeMode: String {
     
     var heightRatio: CGFloat {
         switch self {
-        case .compact: return 0.15
+        case .compact: return 0.10
         case .regular: return 0.25
         }
     }
@@ -20,6 +20,7 @@ struct ContentView: View {
     @State private var showSettings = false
     @State private var keyboardVisible = false
     @State private var cardSizeMode: CardSizeMode = .regular
+    @State private var scrolledJotId: String?
     
     private var jots: [Jot] {
         db.jots.filter { !$0.isTrashed }.sorted { $0.updatedAt > $1.updatedAt }
@@ -104,6 +105,7 @@ struct ContentView: View {
                 }
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
+                .scrollPosition(id: $scrolledJotId)
                 .simultaneousGesture(
                     MagnifyGesture()
                         .onEnded { value in
