@@ -121,38 +121,38 @@ struct ContentView: View {
             // 展开的卡片覆盖层
             if let currentJot = jots.first(where: { $0.id == currentJotId }) {
                 let pullProgress = min(pullOffset / 200, 1.0)
+                // isCollapsed 时用 1.0，否则用下拉进度
                 let animProgress = isCollapsed ? 1.0 : pullProgress
                 let currentW = expandedW - (expandedW - collapsedW) * animProgress
                 let currentH = expandedH - (expandedH - collapsedH) * animProgress
                 
-                Group {
-                    if !isCollapsed {
-                        Color.black.opacity(0.001)
-                            .ignoresSafeArea()
-                            .contentShape(Rectangle())
-                            .onTapGesture { handleBackgroundTap() }
-                            .gesture(
-                                keyboardVisible ? nil :
-                                DragGesture(minimumDistance: 5)
-                                    .onChanged { value in
-                                        if value.translation.height > 0 {
-                                            pullOffset = value.translation.height
+                // 背景遮罩
+                if !isCollapsed {
+                    Color.black.opacity(0.001)
+                        .ignoresSafeArea()
+                        .contentShape(Rectangle())
+                        .onTapGesture { handleBackgroundTap() }
+                        .gesture(
+                            keyboardVisible ? nil :
+                            DragGesture(minimumDistance: 5)
+                                .onChanged { value in
+                                    if value.translation.height > 0 {
+                                        pullOffset = value.translation.height
+                                    }
+                                }
+                                .onEnded { value in
+                                    if value.translation.height > 100 {
+                                        withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+                                            isCollapsed = true
+                                            pullOffset = 0
+                                        }
+                                    } else {
+                                        withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+                                            pullOffset = 0
                                         }
                                     }
-                                    .onEnded { value in
-                                        if value.translation.height > 100 {
-                                            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
-                                                isCollapsed = true
-                                                pullOffset = 0
-                                            }
-                                        } else {
-                                            withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
-                                                pullOffset = 0
-                                            }
-                                        }
-                                    }
-                            )
-                    }
+                                }
+                        )
                 }
                 
                 CardItem(
@@ -164,7 +164,6 @@ struct ContentView: View {
                 )
                 .frame(width: currentW, height: currentH)
                 .offset(y: pullOffset * 0.5)
-                .opacity(isCollapsed ? 0 : 1)
                 .allowsHitTesting(!isCollapsed)
             }
         }
