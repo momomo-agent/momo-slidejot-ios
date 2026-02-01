@@ -1,0 +1,419 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		379BDB2531B3289C6270EFC2 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676C2D59A55BAB394EFB6507 /* DatabaseManager.swift */; };
+		402090770F835577697866BC /* AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E4ECB943DEDD3A66BE7B1A /* AddButton.swift */; };
+		6CDD9D161E1D9E524C63B9A9 /* SlideJotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45972D0C88D11BD23D511CA0 /* SlideJotApp.swift */; };
+		79FA419916C01AA153997E53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69978785D0EFDFB31A4A420F /* Assets.xcassets */; };
+		8E10FA61D352DAF570CEC21B /* CardStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DC8B4A4A58685D3952BF44 /* CardStackView.swift */; };
+		B24B766ECF1C56B827AB3F4A /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A21198B59D40AAF1DE41BC5 /* EmptyStateView.swift */; };
+		BBC99C9624F4CE2C2730B1C4 /* JotCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A499CC2D3AFD9A5F94C7C45 /* JotCardView.swift */; };
+		BE0C7FCC518705FD827728F7 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = AEE7B7B84EBC2A2214EC900F /* GRDB */; };
+		BF15A750642228078A2050AC /* Jot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038F15125150FB6AD20092A1 /* Jot.swift */; };
+		C59E387AB7169C5EB424B0CE /* Color+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A5A0235DE4412B22ED311C /* Color+Theme.swift */; };
+		EC288E632AE72932A41A3D1A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7956325917717442B2B6F64 /* ContentView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		01E4ECB943DEDD3A66BE7B1A /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
+		038F15125150FB6AD20092A1 /* Jot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Jot.swift; sourceTree = "<group>"; };
+		3A21198B59D40AAF1DE41BC5 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		3A499CC2D3AFD9A5F94C7C45 /* JotCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JotCardView.swift; sourceTree = "<group>"; };
+		45972D0C88D11BD23D511CA0 /* SlideJotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideJotApp.swift; sourceTree = "<group>"; };
+		676C2D59A55BAB394EFB6507 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		69978785D0EFDFB31A4A420F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		83DC8B4A4A58685D3952BF44 /* CardStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStackView.swift; sourceTree = "<group>"; };
+		88A5A0235DE4412B22ED311C /* Color+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Theme.swift"; sourceTree = "<group>"; };
+		92F7DEBCEFA9ABE61164A8F2 /* SlideJot.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SlideJot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7956325917717442B2B6F64 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BD45D9F570DDC93872AF868E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BE0C7FCC518705FD827728F7 /* GRDB in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		045FB9561DF6B8C46F969EE2 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				45972D0C88D11BD23D511CA0 /* SlideJotApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		0EC57649D763EF6732444BF2 = {
+			isa = PBXGroup;
+			children = (
+				D9B797A3451FB65F986C5B3E /* Resources */,
+				EC38CFD1DC5276B585D3ACB4 /* Sources */,
+				8DA28595A4A80F383446CB0E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		42D4EF733578068D2142AF93 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				88A5A0235DE4412B22ED311C /* Color+Theme.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		8DA28595A4A80F383446CB0E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				92F7DEBCEFA9ABE61164A8F2 /* SlideJot.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B7E9416D1118F1E4ECA9EE73 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				01E4ECB943DEDD3A66BE7B1A /* AddButton.swift */,
+				3A21198B59D40AAF1DE41BC5 /* EmptyStateView.swift */,
+				3A499CC2D3AFD9A5F94C7C45 /* JotCardView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		D9B797A3451FB65F986C5B3E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				69978785D0EFDFB31A4A420F /* Assets.xcassets */,
+			);
+			name = Resources;
+			path = SlideJot/Resources;
+			sourceTree = "<group>";
+		};
+		E09D28E66E2C80F21467888A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				83DC8B4A4A58685D3952BF44 /* CardStackView.swift */,
+				D7956325917717442B2B6F64 /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		EC38CFD1DC5276B585D3ACB4 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				045FB9561DF6B8C46F969EE2 /* App */,
+				B7E9416D1118F1E4ECA9EE73 /* Components */,
+				42D4EF733578068D2142AF93 /* Extensions */,
+				FA991BD1CAF67526037446F1 /* Models */,
+				E09D28E66E2C80F21467888A /* Views */,
+			);
+			name = Sources;
+			path = SlideJot/Sources;
+			sourceTree = "<group>";
+		};
+		FA991BD1CAF67526037446F1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				676C2D59A55BAB394EFB6507 /* DatabaseManager.swift */,
+				038F15125150FB6AD20092A1 /* Jot.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0EB9F1B49E831C0287C67555 /* SlideJot */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 689AB198EC789236716265FD /* Build configuration list for PBXNativeTarget "SlideJot" */;
+			buildPhases = (
+				0F15C50EE1F7F00E98828958 /* Sources */,
+				B4816B185E0747AC5B569852 /* Resources */,
+				BD45D9F570DDC93872AF868E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SlideJot;
+			packageProductDependencies = (
+				AEE7B7B84EBC2A2214EC900F /* GRDB */,
+			);
+			productName = SlideJot;
+			productReference = 92F7DEBCEFA9ABE61164A8F2 /* SlideJot.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4EB54DDE5371BE8B06B7B5F0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = 56ECD395E221C692207ADBD3 /* Build configuration list for PBXProject "SlideJot" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 0EC57649D763EF6732444BF2;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B79030484BE18438E2BBFFF4 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0EB9F1B49E831C0287C67555 /* SlideJot */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B4816B185E0747AC5B569852 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79FA419916C01AA153997E53 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0F15C50EE1F7F00E98828958 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				402090770F835577697866BC /* AddButton.swift in Sources */,
+				8E10FA61D352DAF570CEC21B /* CardStackView.swift in Sources */,
+				C59E387AB7169C5EB424B0CE /* Color+Theme.swift in Sources */,
+				EC288E632AE72932A41A3D1A /* ContentView.swift in Sources */,
+				379BDB2531B3289C6270EFC2 /* DatabaseManager.swift in Sources */,
+				B24B766ECF1C56B827AB3F4A /* EmptyStateView.swift in Sources */,
+				BF15A750642228078A2050AC /* Jot.swift in Sources */,
+				BBC99C9624F4CE2C2730B1C4 /* JotCardView.swift in Sources */,
+				6CDD9D161E1D9E524C63B9A9 /* SlideJotApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5E4A4F9A8BE4382085B0C334 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		665B2301830CF1BF6849406E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		6B2ED730421F7F14BF58F62E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SlideJot/SlideJot.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = SlideJot/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.slidejot.ios;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C38926BE35EF9871BC12319E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SlideJot/SlideJot.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = SlideJot/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.slidejot.ios;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		56ECD395E221C692207ADBD3 /* Build configuration list for PBXProject "SlideJot" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				665B2301830CF1BF6849406E /* Debug */,
+				5E4A4F9A8BE4382085B0C334 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		689AB198EC789236716265FD /* Build configuration list for PBXNativeTarget "SlideJot" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C38926BE35EF9871BC12319E /* Debug */,
+				6B2ED730421F7F14BF58F62E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B79030484BE18438E2BBFFF4 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.24.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AEE7B7B84EBC2A2214EC900F /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B79030484BE18438E2BBFFF4 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 4EB54DDE5371BE8B06B7B5F0 /* Project object */;
+}
