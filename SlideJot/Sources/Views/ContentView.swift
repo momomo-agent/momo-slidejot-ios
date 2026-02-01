@@ -87,6 +87,7 @@ struct ContentView: View {
                             }
                         }
                     )
+                    .matchedGeometryEffect(id: jot.id, in: cardNamespace, isSource: isCollapsed || jot.id != currentJotId)
                     .frame(width: collapsedW, height: collapsedH)
                     .opacity(isCollapsed || jot.id != currentJotId ? 1 : 0)
                     .listRowBackground(Color.clear)
@@ -162,6 +163,7 @@ struct ContentView: View {
                     onUpdate: { text in Task { await db.updateJot(currentJot, content: text) } },
                     onTap: {}
                 )
+                .matchedGeometryEffect(id: currentJot.id, in: cardNamespace, isSource: !isCollapsed)
                 .frame(width: currentW, height: currentH)
                 .offset(y: pullOffset * 0.5)
                 .allowsHitTesting(!isCollapsed)
