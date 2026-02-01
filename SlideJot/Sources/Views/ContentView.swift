@@ -89,7 +89,6 @@ struct ContentView: View {
                                 }
                             }
                         )
-                        .matchedGeometryEffect(id: jot.id, in: cardNamespace)
                         .frame(width: collapsedW, height: collapsedH)
                         .listRowBackground(Color.clear)
                         .listRowSeparator(.hidden)
@@ -159,7 +158,6 @@ struct ContentView: View {
                     onUpdate: { text in Task { await db.updateJot(currentJot, content: text) } },
                     onTap: {}
                 )
-                .matchedGeometryEffect(id: currentJot.id, in: cardNamespace)
                 .frame(width: currentW, height: currentH)
                 .offset(y: pullOffset * 0.5)
             }
