@@ -119,54 +119,49 @@ struct ContentView: View {
             )
             .allowsHitTesting(isCollapsed)
             
-            // 展开的卡片覆盖层
-            if let currentJot = jots.first(where: { $0.id == currentJotId }) {
+            // 展开的卡片覆盖层 - 只在非收起状态显示
+            if !isCollapsed, let currentJot = jots.first(where: { $0.id == currentJotId }) {
                 let pullProgress = min(pullOffset / 200, 1.0)
-                // isCollapsed 时用 1.0，否则用下拉进度
-                let animProgress = isCollapsed ? 1.0 : pullProgress
-                let currentW = expandedW - (expandedW - collapsedW) * animProgress
-                let currentH = expandedH - (expandedH - collapsedH) * animProgress
+                let currentW = expandedW - (expandedW - collapsedW) * pullProgress
+                let currentH = expandedH - (expandedH - collapsedH) * pullProgress
                 
                 // 背景遮罩
-                if !isCollapsed {
-                    Color.black.opacity(0.001)
-                        .ignoresSafeArea()
-                        .contentShape(Rectangle())
-                        .onTapGesture { handleBackgroundTap() }
-                        .gesture(
-                            keyboardVisible ? nil :
-                            DragGesture(minimumDistance: 5)
-                                .onChanged { value in
-                                    if value.translation.height > 0 {
-                                        pullOffset = value.translation.height
+                Color.black.opacity(0.001)
+                    .ignoresSafeArea()
+                    .contentShape(Rectangle())
+                    .onTapGesture { handleBackgroundTap() }
+                    .gesture(
+                        keyboardVisible ? nil :
+                        DragGesture(minimumDistance: 5)
+                            .onChanged { value in
+                                if value.translation.height > 0 {
+                                    pullOffset = value.translation.height
+                                }
+                            }
+                            .onEnded { value in
+                                if value.translation.height > 100 {
+                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+                                        isCollapsed = true
+                                        pullOffset = 0
+                                    }
+                                } else {
+                                    withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
+                                        pullOffset = 0
                                     }
                                 }
-                                .onEnded { value in
-                                    if value.translation.height > 100 {
-                                        withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
-                                            isCollapsed = true
-                                            pullOffset = 0
-                                        }
-                                    } else {
-                                        withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
-                                            pullOffset = 0
-                                        }
-                                    }
-                                }
-                        )
-                }
+                            }
+                    )
                 
                 CardItem(
                     jot: currentJot,
                     isCurrent: true,
-                    isCollapsed: isCollapsed,
+                    isCollapsed: false,
                     onUpdate: { text in Task { await db.updateJot(currentJot, content: text) } },
                     onTap: {}
                 )
-                .matchedGeometryEffect(id: currentJot.id, in: cardNamespace, isSource: !isCollapsed)
+                .matchedGeometryEffect(id: currentJot.id, in: cardNamespace, isSource: true)
                 .frame(width: currentW, height: currentH)
                 .offset(y: pullOffset * 0.5)
-                .allowsHitTesting(!isCollapsed)
             }
         }
     }
