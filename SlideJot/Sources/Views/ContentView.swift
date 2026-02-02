@@ -146,6 +146,7 @@ struct ContentView: View {
                                     withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
                                         isCollapsed = true
                                         pullOffset = 0
+                                        isNewCard = false
                                     }
                                 } else {
                                     withAnimation(.spring(response: 0.25, dampingFraction: 0.9)) {
@@ -166,7 +167,7 @@ struct ContentView: View {
                 .frame(width: currentW, height: currentH)
                 .offset(y: pullOffset * 0.5)
                 .zIndex(1)
-                .transition(isNewCard ? .scale.combined(with: .opacity) : .identity)
+                .transition(isNewCard ? .scale(scale: 0.8).combined(with: .opacity) : .identity)
             }
         }
     }
