@@ -119,6 +119,7 @@ struct ContentView: View {
             )
             .allowsHitTesting(isCollapsed)
             .opacity(isCollapsed ? 1 : 0)
+            .animation(.none, value: isCollapsed)
             
             // 展开的卡片覆盖层 - 只在非收起状态显示
             if !isCollapsed, let currentJot = jots.first(where: { $0.id == currentJotId }) {
@@ -163,6 +164,8 @@ struct ContentView: View {
                 .matchedGeometryEffect(id: currentJot.id, in: cardNamespace, isSource: true)
                 .frame(width: currentW, height: currentH)
                 .offset(y: pullOffset * 0.5)
+                .zIndex(1)
+                .transition(.scale.combined(with: .opacity))
             }
         }
     }
