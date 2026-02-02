@@ -72,8 +72,9 @@ struct ContentView: View {
         let collapsedH = geo.size.height * cardSizeMode.heightRatio
         
         return ZStack {
-            // 列表始终存在
-            List {
+            // 列表只在收起状态显示
+            if isCollapsed {
+                List {
                 ForEach(jots) { jot in
                     CardItem(
                         jot: jot,
@@ -117,9 +118,7 @@ struct ContentView: View {
                         }
                     }
             )
-            .allowsHitTesting(isCollapsed)
-            .opacity(isCollapsed ? 1 : 0)
-            .animation(.none, value: isCollapsed)
+            }
             
             // 展开的卡片覆盖层 - 只在非收起状态显示
             if !isCollapsed, let currentJot = jots.first(where: { $0.id == currentJotId }) {
