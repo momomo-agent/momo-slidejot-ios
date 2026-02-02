@@ -21,6 +21,7 @@ struct ContentView: View {
     @State private var keyboardVisible = false
     @State private var cardSizeMode: CardSizeMode = .regular
     @State private var scrolledJotId: String?
+    @State private var isNewCard = false
     
     private var jots: [Jot] {
         db.jots.filter { !$0.isTrashed }.sorted { $0.updatedAt > $1.updatedAt }
@@ -72,9 +73,8 @@ struct ContentView: View {
         let collapsedH = geo.size.height * cardSizeMode.heightRatio
         
         return ZStack {
-            // 列表只在收起状态显示
-            if isCollapsed {
-                List {
+            // 列表始终存在，用 opacity 隐藏
+            List {
                 ForEach(jots) { jot in
                     CardItem(
                         jot: jot,
@@ -83,6 +83,7 @@ struct ContentView: View {
                         onUpdate: { _ in },
                         onTap: {
                             currentJotId = jot.id
+                            isNewCard = false
                             withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
                                 isCollapsed = false
                             }
@@ -118,7 +119,8 @@ struct ContentView: View {
                         }
                     }
             )
-            }
+            .opacity(isCollapsed ? 1 : 0)
+            .allowsHitTesting(isCollapsed)
             
             // 展开的卡片覆盖层 - 只在非收起状态显示
             if !isCollapsed, let currentJot = jots.first(where: { $0.id == currentJotId }) {
@@ -160,11 +162,11 @@ struct ContentView: View {
                     onUpdate: { text in Task { await db.updateJot(currentJot, content: text) } },
                     onTap: {}
                 )
-                .matchedGeometryEffect(id: currentJot.id, in: cardNamespace, isSource: true)
+                .matchedGeometryEffect(id: currentJot.id, in: cardNamespace, isSource: !isNewCard)
                 .frame(width: currentW, height: currentH)
                 .offset(y: pullOffset * 0.5)
                 .zIndex(1)
-                .transition(.scale.combined(with: .opacity))
+                .transition(isNewCard ? .scale.combined(with: .opacity) : .identity)
             }
         }
     }
@@ -223,6 +225,7 @@ struct ContentView: View {
                     Task {
                         if let newJot = await db.createJot() {
                             currentJotId = newJot.id
+                            isNewCard = true
                             withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
                                 isCollapsed = false
                             }
