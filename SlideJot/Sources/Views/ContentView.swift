@@ -13,7 +13,6 @@ enum CardSizeMode: String {
 
 struct ContentView: View {
     @EnvironmentObject private var db: DatabaseManager
-    @Namespace private var cardNamespace
     @State private var currentJotId: String? = nil
     @State private var isCollapsed = true
     @State private var pullOffset: CGFloat = 0
@@ -21,7 +20,11 @@ struct ContentView: View {
     @State private var keyboardVisible = false
     @State private var cardSizeMode: CardSizeMode = .regular
     @State private var scrolledJotId: String?
+    @State private var expandedCardOffset: CGFloat = 0
     @State private var isNewCard = false
+    @State private var expandScale: CGFloat = 1.0
+    @State private var expandOpacity: Double = 1.0
+    @State private var cardAppearOffset: CGFloat = 0
     
     private var jots: [Jot] {
         db.jots.filter { !$0.isTrashed }.sorted { $0.updatedAt > $1.updatedAt }
@@ -61,6 +64,9 @@ struct ContentView: View {
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         } else if !isCollapsed {
             withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                expandScale = 0.9
+                expandOpacity = 0
+                cardAppearOffset = 50
                 isCollapsed = true
             }
         }
@@ -84,12 +90,18 @@ struct ContentView: View {
                         onTap: {
                             currentJotId = jot.id
                             isNewCard = false
+                            // 初始状态：小且透明
+                            expandScale = 0.85
+                            expandOpacity = 0
+                            cardAppearOffset = 50
                             withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
                                 isCollapsed = false
+                                expandScale = 1.0
+                                expandOpacity = 1.0
+                                cardAppearOffset = 0
                             }
                         }
                     )
-                    .matchedGeometryEffect(id: jot.id, in: cardNamespace, isSource: isCollapsed || jot.id != currentJotId)
                     .frame(width: collapsedW, height: collapsedH)
                     .opacity(isCollapsed || jot.id != currentJotId ? 1 : 0)
                     .listRowBackground(Color.clear)
@@ -144,6 +156,9 @@ struct ContentView: View {
                             .onEnded { value in
                                 if value.translation.height > 100 {
                                     withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+                                        expandScale = 0.9
+                                        expandOpacity = 0
+                                        cardAppearOffset = 50
                                         isCollapsed = true
                                         pullOffset = 0
                                         isNewCard = false
@@ -163,11 +178,11 @@ struct ContentView: View {
                     onUpdate: { text in Task { await db.updateJot(currentJot, content: text) } },
                     onTap: {}
                 )
-                .matchedGeometryEffect(id: currentJot.id, in: cardNamespace, isSource: !isNewCard)
                 .frame(width: currentW, height: currentH)
-                .offset(y: pullOffset * 0.5)
-                .zIndex(1)
-                .transition(isNewCard ? .scale(scale: 0.8).combined(with: .opacity) : .identity)
+                .scaleEffect(expandScale)
+                .opacity(expandOpacity)
+                .offset(y: pullOffset * 0.5 + cardAppearOffset)
+                .zIndex(10)
             }
         }
     }
@@ -227,8 +242,15 @@ struct ContentView: View {
                         if let newJot = await db.createJot() {
                             currentJotId = newJot.id
                             isNewCard = true
-                            withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                            // 新卡片：从更小的位置弹出
+                            expandScale = 0.5
+                            expandOpacity = 0
+                            cardAppearOffset = 100
+                            withAnimation(.spring(response: 0.45, dampingFraction: 0.8)) {
                                 isCollapsed = false
+                                expandScale = 1.0
+                                expandOpacity = 1.0
+                                cardAppearOffset = 0
                             }
                         }
                     }
